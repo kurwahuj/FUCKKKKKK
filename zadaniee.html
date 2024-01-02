@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+        <div class="container bg-primary">
+            <h1>Obecna pogoda</h1>
+            <form id="pogoda">
+                <div class="form-group">
+                    <label>Lokalizacja: </label>
+                    <input type="text" class="form-control" id="miasto" placeholder="np. Jeżowe"> <br>
+                    <button type="submit" class="btn-primary">Sprawdź pogodę</button>
+                </div>
+            </form>
+            <p id="lokalizacja"></p>
+            <p id="warunki"></p>
+            <p id="temp"></p>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#pogoda").submit(function(event){
+                    szukaj(event);
+                });
+            });
+
+            function szukaj(event){
+                    var api;
+                    api = $.ajax({
+                    url:'https://api.openweathermap.org/data/2.5/weather',
+                    type:'GET',
+                    data: {
+                        q: $("#miasto").val(),
+                        appid: 'd149f91885c3a809bfc84c809e4bafbf',
+                        units: 'metric'
+                    }
+                });
+
+                api.done(function(odp){
+                    dane(odp);
+                });
+            }
+
+            function dane(json){
+                var lokalizacja = json.name;
+                var warunki = json.weather[0].main;
+                var temp = json.main.temp;
+
+                $("#lokalizacja").text(lokalizacja);
+                $("#warunki").text(warunki);
+                $("#temp").text(temp+"°C");
+
+            }
+
+        </script>
+        
+</body>
+</html>
